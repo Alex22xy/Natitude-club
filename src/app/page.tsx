@@ -14,15 +14,37 @@ export default async function Home() {
     <main className="min-h-screen bg-black text-white px-6 py-24 selection:bg-natitude-pink selection:text-black">
       <div className="max-w-5xl mx-auto">
         
-        {/* The Classic Header */}
-        <header className="text-center mb-32">
-          <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter italic">
-            natitude<span className="text-natitude-pink">.</span>
-          </h1>
-          <p className="text-gray-500 mt-6 uppercase tracking-[0.5em] text-[10px]">
-            london underground culture
-          </p>
-        </header>
+        {/* The Moody Jungle Hero Section */}
+<header className="relative h-[60vh] w-full flex flex-col items-center justify-center overflow-hidden mb-20">
+  
+  {/* 1. The Video Background */}
+  <video
+    autoPlay
+    loop
+    muted
+    playsInline
+    className="absolute z-0 w-full h-full object-cover opacity-60"
+  >
+    <source src="/jungle.mp4" type="video/mp4" />
+  </video>
+
+  {/* 2. Dark Overlay for "Moody" feel */}
+  <div className="absolute inset-0 bg-black/40 z-10" />
+
+  {/* 3. Your Transparent SVG Logo */}
+  <div className="relative z-20 w-64 md:w-96">
+    <img 
+      src="/logo.svg" 
+      alt="Natitude Logo" 
+      className="w-full h-auto drop-shadow-[0_0_15px_rgba(255,0,255,0.3)]"
+    />
+  </div>
+
+  {/* 4. The Subtitle */}
+  <p className="relative z-20 text-gray-400 mt-6 uppercase tracking-[0.5em] text-[10px] animate-pulse">
+    london underground culture
+  </p>
+</header>
 
         {/* The Events Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/5 border border-white/5">
