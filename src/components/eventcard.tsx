@@ -1,28 +1,29 @@
+// src/components/eventcard.tsx
 export default function EventCard({ event }: { event: any }) {
   return (
-    <div className="brutalist-card group transition-all hover:translate-x-[-4px] hover:translate-y-[-4px] border-2 border-white p-4 bg-black relative shadow-[4px_4px_0px_0px_#FF00FF]">
+    <div className="group border border-white/10 p-6 bg-black/40 backdrop-blur-sm transition-all duration-300 hover:border-natitude-pink/50">
       
-      {/* 1. Header with Title and Price */}
-      <div className="flex justify-between items-start mb-4">
-        <h3 className="text-2xl font-black lowercase text-white">
+      {/* Header: Title and Price */}
+      <div className="flex justify-between items-baseline mb-6">
+        <h3 className="text-xl font-bold uppercase tracking-[0.2em] text-white">
           {event.title}
         </h3>
-        <span className="bg-white text-black px-2 py-1 font-bold text-sm lowercase">
+        <span className="text-natitude-pink font-mono text-sm">
           £{event.price}
         </span>
       </div>
       
-      {/* 2. Date Section */}
-      <p className="text-gray-400 text-sm lowercase mb-6">
-        {event.date} — doors at 10pm
+      {/* Date: Minimalist layout */}
+      <p className="text-gray-500 text-[10px] uppercase tracking-[0.3em] mb-10">
+        {event.date} — 22:00 til late
       </p>
 
-      {/* 3. The Working SumUp Link */}
+      {/* Button: Clean outlined style */}
       <a 
         href={event.payment_link || "#"} 
         target="_blank" 
         rel="noopener noreferrer"
-        className="block w-full py-2 border-2 border-white text-center font-bold uppercase text-white hover:bg-natitude-pink hover:text-black transition-colors cursor-pointer"
+        className="block w-full py-3 border border-white/40 text-center text-[10px] uppercase tracking-[0.4em] text-white hover:bg-white hover:text-black transition-all duration-500"
       >
         get ticket
       </a>

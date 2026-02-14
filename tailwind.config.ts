@@ -1,16 +1,21 @@
-// tailwind.config.ts
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
       colors: {
-        natitudeBlack: "#000000",
-        natitudeGray: "#18181B",
-        natitudePink: "#FF00FF", // The "Action" color
+        // Renamed to kebab-case to match standard Tailwind style
+        'natitude-black': "#000000",
+        'natitude-gray': "#18181B",
+        'natitude-pink': "#FF00FF", 
+      },
+      // Adding this makes replicating the navigation and headers MUCH easier
+      letterSpacing: {
+        'widest-club': '0.3em',
+        'brutal': '0.5em',
       },
       borderWidth: {
-        '3': '3px', // For that heavy brutalist border look
+        '3': '3px',
       }
     },
   },
