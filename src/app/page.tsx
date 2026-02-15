@@ -42,7 +42,7 @@ export default async function Home() {
 
   {/* 4. The Subtitle */}
   <p className="relative z-20 text-gray-400 mt-6 uppercase tracking-[0.5em] text-[10px] animate-pulse">
-    london underground culture
+    Natitude – Home of underground jungle culture
   </p>
 </header>
 
