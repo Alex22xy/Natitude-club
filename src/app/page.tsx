@@ -18,20 +18,20 @@ export default function Home() {
             <source src="/jungle.mp4" type="video/mp4" />
           </video>
 
-          {/* 2. Dark Overlay for "Moody" feel */}
+          {/* 2. Dark Overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black z-10" />
 
-          {/* 3. Your Transparent SVG Logo - Responsive sizing */}
-          <div className="relative z-20 w-48 md:w-96 px-4">
+          {/* 3. Your Transparent SVG Logo - Scaled Up */}
+          <div className="relative z-20 w-64 md:w-[32rem] px-4 transition-all duration-700">
             <img 
               src="/logo.svg" 
               alt="Natitude Logo" 
-              className="w-full h-auto drop-shadow-[0_0_20px_rgba(255,0,255,0.4)]"
+              className="w-full h-auto drop-shadow-[0_0_30px_rgba(255,0,255,0.35)]"
             />
           </div>
 
-          {/* 4. The Subtitle */}
-          <p className="relative z-20 text-gray-400 mt-8 uppercase tracking-[0.3em] md:tracking-[0.5em] text-[8px] md:text-[10px] animate-pulse px-6 text-center leading-loose">
+          {/* 4. The Subtitle - Larger & More Spaced */}
+          <p className="relative z-20 text-gray-300 mt-10 uppercase tracking-[0.4em] md:tracking-[0.7em] text-[10px] md:text-[14px] animate-pulse px-6 text-center leading-loose">
             Home of underground jungle culture
           </p>
         </header>
