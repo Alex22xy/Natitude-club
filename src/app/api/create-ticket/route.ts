@@ -15,7 +15,7 @@ export async function POST(req: Request) {
       .from('tickets')
       .insert([{ 
         email, 
-        event_name: eventName, 
+        event_name: eventName,
         ticket_code: ticketCode 
       }]);
 
