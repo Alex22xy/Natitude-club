@@ -1,23 +1,32 @@
-import { createClient } from '@supabase/supabase-admin'; // Use service role key
+import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
-  const { email, eventName } = await req.json();
-  
-  // Generate a random 6-digit ticket code
-  const ticketCode = `NAT-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+  try {
+    const { email, eventName } = await req.json();
+    
+    // Generate a unique code
+    const ticketCode = `NAT-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
 
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+    // Initialize Supabase with Service Role Key for write access
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
 
-  const { data, error } = await supabase
-    .from('tickets')
-    .insert([{ email, event_name: eventName, ticket_code: ticketCode }])
-    .select();
+    const { error } = await supabase
+      .from('tickets')
+      .insert([{ 
+        email, 
+        event_name: eventName, 
+        ticket_code: ticketCode,
+        payment_status: 'pending' 
+      }]);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) throw error;
 
-  return NextResponse.json({ ticketCode });
+    return NextResponse.json({ success: true, ticketCode });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
 }
