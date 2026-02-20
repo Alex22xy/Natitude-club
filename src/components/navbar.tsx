@@ -1,70 +1,69 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const [status, setStatus] = useState('OFFLINE');
+
+  // Fetch the Live Status from Supabase
+  useEffect(() => {
+    const fetchStatus = async () => {
+      const { data } = await supabase.from('system_status').select('current_state').single();
+      if (data) setStatus(data.current_state);
+    };
+    fetchStatus();
+    
+    // Optional: Real-time subscription so it updates without refresh
+    const channel = supabase.channel('status_updates')
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'system_status' }, 
+      (payload) => setStatus(payload.new.current_state))
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, []);
 
   const navLinks = [
-    { name: 'Wild', path: '/' },
     { name: 'Rituals', path: '/rituals' },
+    { name: 'Wild', path: '/' },
     { name: 'Hire', path: '/hire' },
   ];
 
   return (
-    <nav className="fixed top-0 w-full z-[100] p-6 flex justify-between items-center bg-gradient-to-b from-black to-transparent">
-      {/* Brand - Keep it small and sleek in the corner */}
-      <Link href="/" className="text-lg font-bold tracking-[0.3em] uppercase">
-        Natitude
-      </Link>
-
-      {/* Hamburger Toggle */}
-      <button 
-        onClick={() => setIsOpen(true)}
-        className="flex flex-col gap-1.5 p-2 group"
-        aria-label="Open Menu"
-      >
-        <div className="w-6 h-[1px] bg-white group-hover:bg-natitude-pink transition-colors" />
-        <div className="w-6 h-[1px] bg-white group-hover:bg-natitude-pink transition-colors" />
-      </button>
-
-      {/* FULL SCREEN MOBILE OVERLAY */}
-      {isOpen && (
-        <div className="fixed inset-0 bg-black/98 backdrop-blur-xl z-[110] flex flex-col items-center justify-center p-12">
-          
-          {/* Centered Navigation Links (The Thumb Zone) */}
-          <div className="flex flex-col items-center space-y-12 w-full">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.path}
-                onClick={() => setIsOpen(false)}
-                className={`text-4xl font-bold uppercase tracking-[0.4em] transition-all duration-300 ${
-                  pathname === link.path 
-                    ? 'text-natitude-pink' 
-                    : 'text-white/60 hover:text-white hover:tracking-[0.5em]'
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
-          </div>
-
-          {/* Close Button - Positioned at the bottom for one-handed thumb access */}
-          <button 
-            onClick={() => setIsOpen(false)}
-            className="absolute bottom-16 flex flex-col items-center group"
-          >
-            <span className="text-[10px] uppercase tracking-[0.6em] text-zinc-600 group-hover:text-white transition-colors mb-4">
-              Close Transmission
-            </span>
-            <div className="w-10 h-[1px] bg-zinc-800 group-hover:bg-natitude-pink transition-all w-16" />
-          </button>
+    <nav className="fixed bottom-0 left-0 w-full z-[100] px-6 pb-8 pt-12 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none">
+      <div className="max-w-md mx-auto flex flex-col items-center gap-6 pointer-events-auto">
+        
+        {/* LIVE STATUS INDICATOR */}
+        <div className="flex items-center gap-3 bg-zinc-900/40 backdrop-blur-md border border-white/5 px-4 py-1.5 rounded-full">
+          <div className={`w-1.5 h-1.5 rounded-full ${
+            status === 'LIVE' ? 'bg-green-500 animate-pulse shadow-[0_0_8px_#22c55e]' : 
+            status === 'PEAK' ? 'bg-red-500 animate-pulse shadow-[0_0_8px_#ef4444]' : 'bg-zinc-600'
+          }`} />
+          <span className="text-[8px] uppercase tracking-[0.4em] text-zinc-400 font-medium">
+            System {status}
+          </span>
         </div>
-      )}
+
+        {/* BOTTOM NAVIGATION LINKS */}
+        <div className="flex items-center justify-between w-full border border-white/10 bg-zinc-900/20 backdrop-blur-xl p-2 rounded-sm">
+          {navLinks.map((link) => (
+            <Link
+              key={link.name}
+              href={link.path}
+              className={`flex-1 text-center py-3 text-[10px] uppercase tracking-[0.3em] transition-all duration-500 ${
+                pathname === link.path 
+                  ? 'text-natitude-pink font-bold' 
+                  : 'text-zinc-500 hover:text-white'
+              }`}
+            >
+              {link.name}
+            </Link>
+          ))}
+        </div>
+      </div>
     </nav>
   );
 }
