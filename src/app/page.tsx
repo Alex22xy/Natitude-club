@@ -19,7 +19,7 @@ export default function WildPage() {
     style={{ filter: 'brightness(0.6)' }} // Adds mood and makes logo pop
   >
     {/* Ensure the path exactly matches your file name in the /public folder */}
-    <source src="/hero-video.mp4" type="video/mp4" />
+    <source src="/jungle.mp4" type="video/mp4" />
     Your browser does not support the video tag.
   </video>
 
