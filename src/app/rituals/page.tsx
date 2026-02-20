@@ -6,8 +6,9 @@ import { supabase } from '@/lib/supabase';
 export default function RitualsPage() {
   const [events, setEvents] = useState<any[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
-  const [fetching, setFetching] = useState(true); // Track initial load
-  const [submitting, setSubmitting] = useState(false); // Track form submit
+  const [fetching, setFetching] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false); // For the high-end overlay
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -41,7 +42,6 @@ export default function RitualsPage() {
         email: formData.get('email'),
         eventId: selectedEvent.id,
         eventTitle: selectedEvent.title,
-        // Fallback to false/empty string if columns don't exist yet
         isPaid: selectedEvent.is_paid ?? false,
         paymentLink: selectedEvent.payment_link ?? ""
       };
@@ -57,8 +57,8 @@ export default function RitualsPage() {
       if (data.type === 'PAYMENT_REDIRECT') {
         window.location.href = data.url;
       } else if (data.success) {
-        alert("Registration Confirmed! Welcome to the Jungle.");
         setSelectedEvent(null);
+        setShowSuccess(true);
       } else {
         throw new Error(data.error || "Registration failed");
       }
@@ -87,10 +87,24 @@ export default function RitualsPage() {
           events.map((event) => (
             <div 
               key={event.id} 
-              className="border border-white/10 p-6 flex flex-col md:flex-row justify-between items-start md:items-center bg-zinc-900/20 backdrop-blur-sm gap-4"
+              className="relative border border-white/10 p-6 flex flex-col md:flex-row justify-between items-start md:items-center bg-zinc-900/20 backdrop-blur-sm gap-4 group"
             >
+              {/* STATUS BADGES */}
+              <div className="absolute -top-3 left-6 flex gap-2">
+                {event.is_sold_out && (
+                  <span className="bg-zinc-800 text-zinc-400 text-[8px] font-bold uppercase tracking-[0.2em] px-3 py-1 border border-zinc-700">
+                    Ritual Full
+                  </span>
+                )}
+                {event.low_capacity && !event.is_sold_out && (
+                  <span className="bg-red-600 text-white text-[8px] font-bold uppercase tracking-[0.2em] px-3 py-1 animate-pulse shadow-[0_0_15px_rgba(220,38,38,0.4)]">
+                    Low Capacity
+                  </span>
+                )}
+              </div>
+
               <div>
-                <h2 className="text-xl uppercase tracking-widest font-bold">
+                <h2 className={`text-xl uppercase tracking-widest font-bold ${event.is_sold_out ? 'text-zinc-600' : 'text-white'}`}>
                   {event.title || "Untitled Ritual"}
                 </h2>
                 <div className="flex flex-wrap gap-4 mt-2">
@@ -105,9 +119,14 @@ export default function RitualsPage() {
               
               <button 
                 onClick={() => setSelectedEvent(event)}
-                className="w-full md:w-auto border border-natitude-pink text-natitude-pink px-8 py-3 text-[10px] uppercase tracking-widest hover:bg-natitude-pink hover:text-white transition-all duration-500"
+                disabled={event.is_sold_out}
+                className={`w-full md:w-auto px-8 py-3 text-[10px] uppercase tracking-widest transition-all duration-500 ${
+                  event.is_sold_out 
+                  ? 'border border-zinc-800 text-zinc-700 cursor-not-allowed' 
+                  : 'border border-natitude-pink text-natitude-pink hover:bg-natitude-pink hover:text-white'
+                }`}
               >
-                Join
+                {event.is_sold_out ? 'Full' : 'Join'}
               </button>
             </div>
           ))
@@ -160,6 +179,24 @@ export default function RitualsPage() {
                 Go Back
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* SUCCESS OVERLAY */}
+      {showSuccess && (
+        <div className="fixed inset-0 bg-black z-[200] flex flex-col items-center justify-center p-6 text-center">
+          <div className="space-y-6 max-w-sm">
+            <h2 className="text-natitude-pink text-2xl font-bold uppercase tracking-[0.5em] animate-pulse">Access Granted</h2>
+            <p className="text-[10px] text-zinc-400 uppercase tracking-widest leading-relaxed">
+              Your registration is complete. <br /> Check your transmission (email) for confirmation.
+            </p>
+            <button 
+              onClick={() => setShowSuccess(false)}
+              className="mt-8 px-12 py-4 border border-white/10 text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all"
+            >
+              Return to Site
+            </button>
           </div>
         </div>
       )}
