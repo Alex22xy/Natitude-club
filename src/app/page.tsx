@@ -30,7 +30,7 @@ export default function WildPage() {
   <div className="relative z-20 w-full max-w-[90vw] md:max-w-[70vw] lg:max-w-[1400px] px-6">
     <div className="transition-all duration-1000 ease-out hover:scale-[1.02]">
       <Image
-        src="/logo.png"
+        src="/logo.svg"
         alt="NATITUDE"
         width={1800}
         height={600}
