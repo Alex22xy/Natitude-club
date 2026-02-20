@@ -40,28 +40,47 @@ export default function HirePage() {
   };
 
   return (
-    <main className="min-h-screen bg-black text-white p-6 pt-24 pb-48">
+    <main className="min-h-screen bg-black text-white p-6 pt-24 pb-64">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold uppercase tracking-[0.4em] text-center mb-8">Private Hire</h1>
-        <p className="text-[10px] text-zinc-500 uppercase tracking-[0.3em] text-center mb-16 leading-loose">
-          Secure the sanctuary for your own rituals. <br/> Private events, film, and sonic experiments.
-        </p>
+        <header className="text-center mb-16">
+          <h1 className="text-3xl font-bold uppercase tracking-[0.4em] mb-4">Private Hire</h1>
+          <p className="text-[10px] text-zinc-500 uppercase tracking-[0.3em] leading-loose">
+            Secure the sanctuary for your own rituals. <br/> Private events, film, and sonic experiments.
+          </p>
+        </header>
 
         <form onSubmit={handleHireSubmit} className="space-y-12">
-          <div className="space-y-8">
+          <div className="space-y-10">
             <div className="group">
-              <label className="text-[10px] uppercase tracking-widest text-zinc-600 group-focus-within:text-natitude-pink transition-colors tracking-[0.2em]">Identification</label>
-              <input name="name" required placeholder="NAME / ORGANIZATION" className="w-full bg-transparent border-b border-white/10 py-4 outline-none focus:border-natitude-pink transition-colors text-[10px] uppercase tracking-widest text-white" />
+              <label className="text-[9px] uppercase tracking-[0.3em] text-zinc-600 group-focus-within:text-natitude-pink transition-colors">Identification</label>
+              <input 
+                name="name" 
+                required 
+                placeholder="NAME / ORGANIZATION" 
+                className="w-full bg-transparent border-b border-white/10 py-4 outline-none focus:border-natitude-pink transition-colors text-[10px] uppercase tracking-[0.2em] text-white placeholder:text-zinc-800" 
+              />
             </div>
             
             <div className="group">
-              <label className="text-[10px] uppercase tracking-widest text-zinc-600 group-focus-within:text-natitude-pink transition-colors tracking-[0.2em]">Digital Path</label>
-              <input name="email" type="email" required placeholder="EMAIL ADDRESS" className="w-full bg-transparent border-b border-white/10 py-4 outline-none focus:border-natitude-pink transition-colors text-[10px] uppercase tracking-widest text-white" />
+              <label className="text-[9px] uppercase tracking-[0.3em] text-zinc-600 group-focus-within:text-natitude-pink transition-colors">Digital Path</label>
+              <input 
+                name="email" 
+                type="email" 
+                required 
+                placeholder="EMAIL ADDRESS" 
+                className="w-full bg-transparent border-b border-white/10 py-4 outline-none focus:border-natitude-pink transition-colors text-[10px] uppercase tracking-[0.2em] text-white placeholder:text-zinc-800" 
+              />
             </div>
 
             <div className="group">
-              <label className="text-[10px] uppercase tracking-widest text-zinc-600 group-focus-within:text-natitude-pink transition-colors tracking-[0.2em]">The Brief</label>
-              <textarea name="message" rows={4} required placeholder="DESCRIBE THE TRANSMISSION..." className="w-full bg-transparent border-b border-white/10 py-4 outline-none focus:border-natitude-pink transition-colors text-[10px] uppercase tracking-widest resize-none text-white" />
+              <label className="text-[9px] uppercase tracking-[0.3em] text-zinc-600 group-focus-within:text-natitude-pink transition-colors">The Brief</label>
+              <textarea 
+                name="message" 
+                rows={4} 
+                required 
+                placeholder="DESCRIBE THE TRANSMISSION..." 
+                className="w-full bg-transparent border-b border-white/10 py-4 outline-none focus:border-natitude-pink transition-colors text-[10px] uppercase tracking-[0.2em] resize-none text-white placeholder:text-zinc-800" 
+              />
             </div>
           </div>
 
@@ -70,14 +89,14 @@ export default function HirePage() {
             disabled={submitting}
             className="w-full py-5 bg-white text-black text-[10px] font-bold uppercase tracking-[0.5em] hover:bg-natitude-pink hover:text-white transition-all duration-700 disabled:opacity-50"
           >
-            {submitting ? 'Sending Transmission...' : 'Request Access'}
+            {submitting ? 'Authenticating...' : 'Request Access'}
           </button>
         </form>
       </div>
 
       {/* SUCCESS OVERLAY */}
       {showSuccess && (
-        <div className="fixed inset-0 bg-black z-[200] flex flex-col items-center justify-center p-6 text-center">
+        <div className="fixed inset-0 bg-black z-[200] flex flex-col items-center justify-center p-6 text-center backdrop-blur-md">
           <div className="space-y-6 max-w-sm">
             <h2 className="text-natitude-pink text-2xl font-bold uppercase tracking-[0.5em] animate-pulse">Transmission Received</h2>
             <p className="text-[10px] text-zinc-400 uppercase tracking-widest leading-relaxed">
