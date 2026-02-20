@@ -8,39 +8,42 @@ export default function WildPage() {
     <main className="relative min-h-screen bg-black overflow-x-hidden">
       
       {/* 1. HERO VIDEO CONTAINER - FULL WIDTH */}
-      <section className="relative w-screen h-[60vh] md:h-[80vh] lg:h-screen flex items-center justify-center overflow-hidden">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source src="/hero-video.mp4" type="video/mp4" />
-        </video>
+      <section className="relative w-screen h-[70vh] md:h-screen flex items-center justify-center overflow-hidden bg-zinc-950">
+  {/* Cinematic Background Video */}
+  <video
+    autoPlay
+    loop
+    muted
+    playsInline
+    className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
+    style={{ filter: 'brightness(0.6)' }} // Adds mood and makes logo pop
+  >
+    {/* Ensure the path exactly matches your file name in the /public folder */}
+    <source src="/hero-video.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
 
-        {/* Dark Overlay for contrast */}
-        <div className="absolute inset-0 bg-black/40 z-10" />
+  {/* Gradient Overlay for extra depth */}
+  <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black z-10" />
 
-        {/* 2. MASSIVE LOGO - SCALES WITH SCREEN */}
-        <div className="relative z-20 w-full px-6 flex flex-col items-center">
-          <div className="w-[80%] md:w-[70%] lg:w-[60%] max-w-[1200px] transition-all duration-700 hover:scale-105">
-            <Image
-              src="/logo.png"
-              alt="NATITUDE"
-              width={1200}
-              height={400}
-              priority
-              className="w-full h-auto drop-shadow-[0_0_30px_rgba(255,0,255,0.3)]"
-            />
-          </div>
-          
-          {/* Subtitle */}
-          <p className="mt-8 text-[10px] md:text-xs uppercase tracking-[0.8em] text-white/80 animate-pulse">
-            Lost in the smoke, found in the bass
-          </p>
-        </div>
-      </section>
+  {/* Massive Centered Logo */}
+  <div className="relative z-20 w-full max-w-[90vw] md:max-w-[70vw] lg:max-w-[1400px] px-6">
+    <div className="transition-all duration-1000 ease-out hover:scale-[1.02]">
+      <Image
+        src="/logo.png"
+        alt="NATITUDE"
+        width={1800}
+        height={600}
+        priority
+        className="w-full h-auto drop-shadow-[0_0_50px_rgba(255,0,255,0.2)]"
+      />
+    </div>
+    
+    <p className="text-center mt-12 text-[10px] md:text-sm uppercase tracking-[1em] text-white/40 animate-pulse font-light">
+      Bury St Edmunds &bull; Sanctuary
+    </p>
+  </div>
+</section>
 
       {/* 3. NAVIGATION SECTION */}
       <section className="relative z-30 py-24 px-6">
