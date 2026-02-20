@@ -31,16 +31,6 @@ export default function WildPage() {
 
       {/* CENTERED BRANDING - Increased size and brightness */}
       <div className="relative z-20 w-full max-w-[90vw] md:max-w-[650px] px-6 flex flex-col items-center">
-        <div className="w-full transition-all duration-1000 ease-out hover:scale-[1.03]">
-          <Image
-            src="/logo.svg"
-            alt="NATITUDE"
-            width={1000} // Increased base size
-            height={333}
-            priority
-            className="w-full h-auto drop-shadow-[0_0_40px_rgba(255,0,255,0.3)]" // Brighter pink glow
-          />
-        </div>
         
         <div className="mt-10 space-y-3 text-center">
           <p className="text-[11px] md:text-[13px] uppercase tracking-[0.8em] text-white font-medium drop-shadow-md">
