@@ -45,23 +45,6 @@ export default function WildPage() {
   </div>
 </section>
 
-      {/* 3. NAVIGATION SECTION */}
-      <section className="relative z-30 py-24 px-6">
-        <div className="max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-          
-          <Link href="/rituals" className="group relative overflow-hidden border border-white/5 bg-zinc-900/20 p-12 text-center transition-all hover:border-natitude-pink/50">
-            <h2 className="text-2xl md:text-4xl font-bold uppercase tracking-[0.3em] group-hover:text-natitude-pink transition-colors">Rituals</h2>
-            <p className="mt-4 text-[10px] uppercase tracking-widest text-zinc-500">View Events & Secure Entry</p>
-          </Link>
-
-          <Link href="/hire" className="group relative overflow-hidden border border-white/5 bg-zinc-900/20 p-12 text-center transition-all hover:border-natitude-pink/50">
-            <h2 className="text-2xl md:text-4xl font-bold uppercase tracking-[0.3em] group-hover:text-natitude-pink transition-colors">Hire</h2>
-            <p className="mt-4 text-[10px] uppercase tracking-widest text-zinc-500">Private Sanctuaries & Bookings</p>
-          </Link>
-
-        </div>
-      </section>
-
       {/* 4. FOOTER INFO */}
       <footer className="py-12 text-center border-t border-white/5">
         <p className="text-[9px] text-zinc-700 uppercase tracking-[0.5em]">
