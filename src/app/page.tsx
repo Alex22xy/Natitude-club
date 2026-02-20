@@ -32,8 +32,8 @@ export default function WildPage() {
       <Image
         src="/logo.svg"
         alt="NATITUDE"
-        width={1800}
-        height={600}
+        width={1200}
+        height={400}
         priority
         className="w-full h-auto drop-shadow-[0_0_50px_rgba(255,0,255,0.2)]"
       />
