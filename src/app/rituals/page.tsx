@@ -8,24 +8,29 @@ export default function RitualsPage() {
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [fetching, setFetching] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false); // For the high-end overlay
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchEvents = async () => {
+    try {
+      setFetching(true);
+      setError(null);
+      const { data, error: sbError } = await supabase
+        .from('events')
+        .select('*')
+        .order('date', { ascending: true });
+      
+      if (sbError) throw sbError;
+      setEvents(data || []);
+    } catch (err) {
+      console.error("Error fetching rituals:", err);
+      setError("TRANSMISSION INTERRUPTED. CHECK YOUR CONNECTION.");
+    } finally {
+      setFetching(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('events')
-          .select('*')
-          .order('date', { ascending: true });
-        
-        if (error) throw error;
-        setEvents(data || []);
-      } catch (err) {
-        console.error("Error fetching rituals:", err);
-      } finally {
-        setFetching(false);
-      }
-    };
     fetchEvents();
   }, []);
 
@@ -70,11 +75,41 @@ export default function RitualsPage() {
     }
   };
 
+  // --- SKELETON STATE ---
   if (fetching) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <p className="text-white text-[10px] uppercase tracking-[0.5em] animate-pulse">Loading Rituals...</p>
-      </div>
+      <main className="min-h-screen bg-black text-white p-6 pt-24 pb-40">
+        <div className="max-w-4xl mx-auto space-y-6">
+          <div className="h-10 w-48 bg-zinc-900 mx-auto mb-16 animate-pulse" />
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="border border-white/5 p-6 h-32 bg-zinc-900/40 relative overflow-hidden">
+               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[shimmer_2s_infinite]" />
+               <div className="flex justify-between items-center">
+                  <div className="space-y-3">
+                    <div className="h-6 w-40 bg-zinc-800" />
+                    <div className="h-3 w-64 bg-zinc-800" />
+                  </div>
+                  <div className="h-10 w-24 bg-zinc-800" />
+               </div>
+            </div>
+          ))}
+        </div>
+      </main>
+    );
+  }
+
+  // --- ERROR STATE ---
+  if (error) {
+    return (
+      <main className="min-h-screen bg-black flex flex-col items-center justify-center p-6 text-center">
+        <h2 className="text-red-500 text-[10px] uppercase tracking-[0.5em] mb-6">{error}</h2>
+        <button 
+          onClick={fetchEvents}
+          className="border border-white/20 px-8 py-3 text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all"
+        >
+          Retry Connection
+        </button>
+      </main>
     );
   }
 
@@ -89,7 +124,6 @@ export default function RitualsPage() {
               key={event.id} 
               className="relative border border-white/10 p-6 flex flex-col md:flex-row justify-between items-start md:items-center bg-zinc-900/20 backdrop-blur-sm gap-4 group"
             >
-              {/* STATUS BADGES */}
               <div className="absolute -top-3 left-6 flex gap-2">
                 {event.is_sold_out && (
                   <span className="bg-zinc-800 text-zinc-400 text-[8px] font-bold uppercase tracking-[0.2em] px-3 py-1 border border-zinc-700">
