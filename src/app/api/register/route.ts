@@ -1,7 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
+import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
+import { ritualConfirmationTemplate } from '@/lib/email-templates';
 
-// Initialize Supabase with Service Role Key for database write access
+// Initialize Supabase
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -9,44 +11,54 @@ const supabase = createClient(
 
 export async function POST(req: Request) {
   try {
+    // 1. Initialize Resend inside the function
+    const resend = new Resend(process.env.RESEND_API_KEY);
     const { name, email, eventId, eventTitle, isPaid, paymentLink } = await req.json();
 
-    // 1. Generate a unique ticket code
+    // 2. Generate a unique ticket code
     const ticketCode = `NAT-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
 
-    // 2. Prepare the registration data
-    // status is 'confirmed' for free events, 'pending' for paid
-    const registrationData = {
-      name,
-      email,
-      event_id: eventId,
-      event_name: eventTitle,
-      ticket_code: ticketCode,
-      status: isPaid ? 'pending' : 'confirmed', 
-    };
-
-    // 3. Insert into your Supabase 'registrations' table
-    const { error } = await supabase
+    // 3. Insert into Supabase
+    const { error: dbError } = await supabase
       .from('registrations')
-      .insert([registrationData]);
+      .insert([{
+        name,
+        email,
+        event_id: eventId,
+        event_name: eventTitle,
+        ticket_code: ticketCode,
+        status: isPaid ? 'pending' : 'confirmed', 
+      }]);
 
-    if (error) throw error;
+    if (dbError) throw dbError;
 
-    // 4. Determine the response
+    // 4. Send Confirmation Email (Sandbox Mode Logic)
+    // We send it to YOUR email because Resend is in sandbox mode.
+    try {
+      await resend.emails.send({
+        from: 'NATITUDE <onboarding@resend.dev>',
+        to: 'alex.john.norton9@gmail.com', // Your verified sandbox email
+        subject: `RITUAL CONFIRMED: ${eventTitle}`,
+        html: ritualConfirmationTemplate(name, eventTitle),
+      });
+    } catch (mailError) {
+      console.error('Email failed but DB saved:', mailError);
+      // We don't crash the whole request if only the email fails
+    }
+
+    // 5. Handle Response
     if (isPaid && paymentLink) {
-      // If paid, tell the frontend to redirect to SumUp
       return NextResponse.json({ 
         success: true, 
         type: 'PAYMENT_REDIRECT', 
         url: `${paymentLink}?redirect_url=https://natitude-club.vercel.app/payment-success` 
       });
-    } else {
-      // If free, tell the frontend we are done
-      return NextResponse.json({ 
-        success: true, 
-        type: 'FREE_CONFIRMED' 
-      });
     }
+
+    return NextResponse.json({ 
+      success: true, 
+      type: 'FREE_CONFIRMED' 
+    });
 
   } catch (err: any) {
     console.error('Registration Error:', err.message);
