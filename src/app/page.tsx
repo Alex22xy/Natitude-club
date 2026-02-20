@@ -1,20 +1,32 @@
 "use client";
 import { useState } from 'react';
 import Image from 'next/image';
+import { joinTribe } from './actions/tribe'; // Adjust path if needed
 
 export default function WildPage() {
   const [isJoining, setIsJoining] = useState(false);
   const [email, setEmail] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [memberId, setMemberId] = useState<string | null>(null);
 
   const handleJoin = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Signal Registered:", email);
+    setSubmitting(true);
+
+    const result = await joinTribe(email);
+
+    if (result.success) {
+      setMemberId(result.memberId || "CONFIRMED");
+    } else {
+      alert("SIGNAL INTERRUPTED. PLEASE TRY AGAIN.");
+      setSubmitting(false);
+    }
   };
 
   return (
     <main className="locked-screen h-[100dvh] w-full bg-black relative flex items-center justify-center overflow-hidden">
       
-      {/* 1. BACKGROUND VIDEO - Darkened slightly more for contrast */}
+      {/* 1. BACKGROUND VIDEO */}
       <div className="absolute inset-0 w-full h-full z-0">
         <video
           autoPlay
@@ -29,7 +41,7 @@ export default function WildPage() {
         <div className="absolute inset-0 bg-black/40" /> 
       </div>
 
-      {/* 2. PERSISTENT SYSTEM INFO (Bottom) */}
+      {/* 2. PERSISTENT SYSTEM INFO */}
       <div className="absolute bottom-36 left-0 w-full text-center z-20">
          <p className="text-[9px] text-zinc-400 uppercase tracking-[0.6em] font-bold drop-shadow-lg">
           Est. MMXXIV
@@ -39,8 +51,26 @@ export default function WildPage() {
       {/* 3. MAIN INTERACTION AREA */}
       <div className="relative z-20 w-full max-w-[90vw] md:max-w-[650px] px-6 flex flex-col items-center">
         
-        <div className="w-full min-h-[250px] flex items-center justify-center">
-          {!isJoining ? (
+        <div className="w-full min-h-[300px] flex items-center justify-center">
+          {memberId ? (
+            /* STATE 3: SUCCESS / CONFIRMATION */
+            <div className="text-center space-y-6 animate-in fade-in zoom-in-95 duration-700">
+              <div className="space-y-2">
+                <h2 className="text-natitude-pink text-[14px] uppercase tracking-[1em] font-bold">Signal Anchored</h2>
+                <p className="text-white text-[24px] tracking-[0.3em] font-bold drop-shadow-glow">{memberId}</p>
+              </div>
+              <p className="text-zinc-400 text-[9px] uppercase tracking-[0.4em] max-w-[280px] mx-auto leading-relaxed">
+                Your digital ID has been dispatched to your path. Welcome to the Tribe.
+              </p>
+              <button 
+                onClick={() => { setIsJoining(false); setMemberId(null); setEmail(""); setSubmitting(false); }}
+                className="text-[9px] uppercase tracking-[0.5em] text-white/50 hover:text-white transition-colors pt-4"
+              >
+                Return to Sanctuary
+              </button>
+            </div>
+          ) : !isJoining ? (
+            /* STATE 1: THE HERO LOGO */
             <div className="flex flex-col items-center animate-in fade-in zoom-in-95 duration-1000">
               <div className="w-full transition-all duration-1000 ease-out active:scale-95">
                 <Image 
@@ -53,7 +83,6 @@ export default function WildPage() {
                 />
               </div>
               
-              {/* JOIN BUTTON - High visibility version */}
               <button 
                 onClick={() => setIsJoining(true)}
                 className="mt-12 text-[10px] uppercase tracking-[0.5em] text-white font-bold border-2 border-white/40 px-10 py-4 hover:border-natitude-pink hover:text-natitude-pink transition-all duration-500 bg-black/60 backdrop-blur-md shadow-2xl"
@@ -62,16 +91,17 @@ export default function WildPage() {
               </button>
             </div>
           ) : (
-            /* STATE 2: THE SIGNAL INPUT - High contrast */
+            /* STATE 2: THE SIGNAL INPUT */
             <form onSubmit={handleJoin} className="w-full max-w-[400px] space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-700 bg-black/40 p-8 rounded-2xl backdrop-blur-sm border border-white/5">
               <div className="text-center space-y-3">
-                <h2 className="text-white text-[12px] uppercase tracking-[0.8em] font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Register Signal</h2>
-                <p className="text-zinc-300 text-[9px] uppercase tracking-[0.3em] font-semibold drop-shadow-md">Enter your digital path to claim your ID</p>
+                <h2 className="text-white text-[12px] uppercase tracking-[0.8em] font-bold drop-shadow-black">Register Signal</h2>
+                <p className="text-zinc-300 text-[9px] uppercase tracking-[0.3em] font-semibold">Enter your digital path to claim your ID</p>
               </div>
               
               <input 
                 autoFocus
                 type="email"
+                required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="EMAIL@DOMAIN.COM"
@@ -79,14 +109,26 @@ export default function WildPage() {
               />
               
               <div className="flex justify-center gap-12 pt-4">
-                <button type="submit" className="text-[10px] uppercase tracking-[0.4em] text-white font-bold hover:text-natitude-pink drop-shadow-lg transition-colors">Confirm</button>
-                <button type="button" onClick={() => setIsJoining(false)} className="text-[10px] uppercase tracking-[0.4em] text-zinc-400 font-bold hover:text-white transition-colors">Cancel</button>
+                <button 
+                  type="submit" 
+                  disabled={submitting}
+                  className="text-[10px] uppercase tracking-[0.4em] text-white font-bold hover:text-natitude-pink disabled:opacity-50 transition-colors"
+                >
+                  {submitting ? 'Authenticating...' : 'Confirm'}
+                </button>
+                <button 
+                  type="button" 
+                  onClick={() => setIsJoining(false)} 
+                  className="text-[10px] uppercase tracking-[0.4em] text-zinc-400 font-bold hover:text-white transition-colors"
+                >
+                  Cancel
+                </button>
               </div>
             </form>
           )}
         </div>
 
-        {/* 4. LOCATION INFO - Bolded for readability */}
+        {/* 4. LOCATION INFO */}
         <div className="mt-16 space-y-4 text-center w-full max-w-[300px]">
           <p className="text-[12px] md:text-[14px] uppercase tracking-[0.8em] text-white font-bold drop-shadow-[0_2px_10px_rgba(0,0,0,1)]">
             Bury St Edmunds
