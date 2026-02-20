@@ -3,53 +3,118 @@
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 
-const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+// Initialize Clients
+const supabase = createClient(
+  process.env.SUPABASE_URL!, 
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function joinTribe(email: string) {
   try {
-    // 1. Check if they are already in the Tribe
+    // 1. Check if the signal is already active in the database
     const { data: existing } = await supabase
       .from('members')
       .select('member_id')
       .eq('email', email)
       .single();
 
-    if (existing) return { success: true, message: "Signal already active." };
+    if (existing) {
+      return { 
+        success: true, 
+        memberId: existing.member_id, 
+        message: "Signal already active." 
+      };
+    }
 
-    // 2. Generate a unique ID (Count + Offset)
-    const { count } = await supabase.from('members').select('*', { count: 'exact', head: true });
+    // 2. Generate a unique ID (Starting from NT-1001)
+    const { count } = await supabase
+      .from('members')
+      .select('*', { count: 'exact', head: true });
+    
     const memberNumber = (count || 0) + 1001;
     const memberId = `NT-${memberNumber}`;
 
-    // 3. Save to Supabase
+    // 3. Anchor the Identity in Supabase
     const { error: dbError } = await supabase
       .from('members')
-      .insert([{ email, member_id: memberId, rank: 'ORIGIN' }]);
+      .insert([{ 
+        email, 
+        member_id: memberId, 
+        rank: 'ORIGIN' 
+      }]);
 
     if (dbError) throw dbError;
 
-    // 4. Send the High-End Welcome Email via Resend
+    // 4. Dispatch the High-End Welcome Transmission
     await resend.emails.send({
-      from: 'NATITUDE <tribe@yourdomain.com>',
+      from: 'NATITUDE <tribe@yourdomain.com>', // Replace with your verified domain
       to: email,
-      subject: 'SIGNAL RECEIVED // WELCOME TO THE TRIBE',
+      subject: 'SIGNAL RECEIVED // YOUR IDENTITY IS ANCHORED',
       html: `
-        <div style="background: #000; color: #fff; padding: 40px; font-family: sans-serif; border: 1px solid #ff00ff;">
-          <h1 style="letter-spacing: 0.5em; text-transform: uppercase; color: #ff00ff;">Confirmed</h1>
-          <p style="letter-spacing: 0.2em; font-size: 10px; color: #666;">YOUR DIGITAL IDENTITY HAS BEEN ANCHORED.</p>
-          <hr style="border: 0; border-top: 1px solid #222; margin: 20px 0;" />
-          <p style="font-size: 24px; letter-spacing: 0.3em;">ID: ${memberId}</p>
-          <p style="font-size: 10px; color: #ff00ff; letter-spacing: 0.2em;">RANK: ORIGIN TRIBE</p>
-          <br />
-          <p style="font-size: 9px; color: #444; line-height: 2;">SHOW THIS TRANSMISSION AT THE SANCTUARY BAR FOR YOUR WELCOME RITUAL.</p>
-        </div>
+        <!DOCTYPE html>
+        <html>
+          <body style="background-color: #000000; margin: 0; padding: 0; font-family: sans-serif;">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #000000;">
+              <tr>
+                <td align="center" style="padding: 40px 20px;">
+                  <table width="100%" style="max-width: 500px; border: 1px solid #1a1a1a; background-color: #050505;">
+                    <tr>
+                      <td align="center" style="padding: 50px 40px 30px 40px;">
+                        <h1 style="color: #ffffff; font-size: 24px; font-weight: bold; letter-spacing: 0.8em; text-transform: uppercase; margin: 0; border-bottom: 2px solid #ff00ff; padding-bottom: 20px; display: inline-block;">
+                          NATITUDE
+                        </h1>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="center" style="padding: 0 40px 20px 40px;">
+                        <p style="color: #ff00ff; font-size: 10px; font-weight: bold; letter-spacing: 0.5em; text-transform: uppercase; margin: 0;">
+                          ● SIGNAL ACTIVE
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 30px 40px;">
+                        <div style="border: 1px solid #333; padding: 30px; background-color: #000; text-align: left;">
+                          <p style="color: #666; font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; margin: 0 0 5px 0;">Identity Code</p>
+                          <p style="color: #ffffff; font-size: 28px; font-weight: bold; letter-spacing: 0.2em; margin: 0;">${memberId}</p>
+                          <p style="color: #666; font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; margin: 20px 0 5px 0;">Classification</p>
+                          <p style="color: #ffffff; font-size: 12px; font-weight: normal; letter-spacing: 0.4em; margin: 0;">ORIGIN TRIBE</p>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 0 40px 40px 40px;">
+                        <p style="color: #999; font-size: 11px; line-height: 1.8; letter-spacing: 0.1em; margin: 0 0 20px 0;">
+                          You are now part of the sanctuary. This digital ID is your key to hidden rituals and sonic experiments.
+                        </p>
+                        <p style="color: #ffffff; font-size: 10px; font-weight: bold; letter-spacing: 0.2em; text-transform: uppercase; margin: 0;">
+                          PERK: WELCOME RITUAL
+                        </p>
+                        <p style="color: #666; font-size: 9px; letter-spacing: 0.1em; margin: 5px 0 0 0;">
+                          Present this transmission at the bar to claim your first credit.
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="center" style="padding: 30px 40px; background-color: #0a0a0a; border-top: 1px solid #1a1a1a;">
+                        <p style="color: #444; font-size: 8px; letter-spacing: 0.4em; text-transform: uppercase; margin: 0;">
+                          BURY ST EDMUNDS &bull; SONIC SANCTUARY &bull; MMXXIV
+                        </p>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </body>
+        </html>
       `
     });
 
     return { success: true, memberId };
   } catch (error) {
-    console.error(error);
+    console.error("Tribe Join Error:", error);
     return { success: false, error: "Transmission Interrupted" };
   }
 }
