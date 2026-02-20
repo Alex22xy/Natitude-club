@@ -9,7 +9,7 @@ export async function POST(req: Request) {
 
     await resend.emails.send({
       from: 'NATITUDE <onboarding@resend.dev>',
-      to: 'YOUR_EMAIL@GMAIL.COM', // Change to your actual email
+      to: 'alex.john.norton9@gmail.com', // Change to your actual email
       subject: `HIRE REQUEST: ${name}`,
       html: `<p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Message:</strong> ${message}</p>`,
     });
