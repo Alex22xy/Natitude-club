@@ -26,18 +26,23 @@ export default function WildPage() {
   {/* Gradient Overlay for extra depth */}
   <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black z-10" />
 
-  {/* Massive Centered Logo */}
-  <div className="relative z-20 w-full max-w-[90vw] md:max-w-[70vw] lg:max-w-[1400px] px-6">
-    <div className="transition-all duration-1000 ease-out hover:scale-[1.02]">
+ {/* Balanced Centered Logo */}
+  <div className="relative z-20 w-full max-w-[80vw] md:max-w-[50vw] lg:max-w-[800px] px-6">
+    <div className="transition-all duration-1000 ease-out hover:scale-[1.02] hover:brightness-110">
       <Image
         src="/logo.svg"
         alt="NATITUDE"
-        width={900}
-        height={300}
+        width={800} // Matches the max-width for sharpness
+        height={266} // Maintains your 3:1 ratio
         priority
-        className="w-full h-auto drop-shadow-[0_0_50px_rgba(255,0,255,0.2)]"
+        className="w-full h-auto drop-shadow-[0_0_30px_rgba(255,0,255,0.15)]"
       />
     </div>
+    
+    <p className="text-center mt-8 text-[9px] md:text-xs uppercase tracking-[0.6em] text-white/50 animate-pulse font-light">
+      Bury St Edmunds &bull; Sanctuary
+    </p>
+  </div>
     
     <p className="text-center mt-12 text-[10px] md:text-sm uppercase tracking-[1em] text-white/40 animate-pulse font-light">
       Bury St Edmunds &bull; Sanctuary
