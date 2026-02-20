@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
-import { ritualConfirmationTemplate } from '@/lib/email-templates';
+import { ritualConfirmationTemplate } from '@/lib/email-templates'; // Make sure the path is correct
 
 // Initialize Supabase
 const supabase = createClient(
