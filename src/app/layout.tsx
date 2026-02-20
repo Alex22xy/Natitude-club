@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     default: 'NATITUDE | Underground Jungle Culture',
     template: '%s | NATITUDE'
   },
-  description: 'A sanctuary for the rhythmically possessed. London\'s premier destination for underground jungle and bass culture.',
+  description: 'A sanctuary for the rhythmically possessed. The premier destination for underground jungle and bass culture.',
   metadataBase: new URL('https://natitude-club.vercel.app'),
   alternates: {
     canonical: '/',
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     siteName: 'NATITUDE',
     images: [
       {
-        url: '/og-image.jpg', // Ensure this file is in your /public folder
+        url: '/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'NATITUDE Sanctuary',
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'NATITUDE | Jungle Culture',
-    description: 'Underground Jungle Culture in the heart of London.',
+    description: 'Underground Jungle Culture.',
     images: ['/og-image.jpg'],
   },
   robots: {
@@ -56,7 +56,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Schema.org structured data for SEO
+  // Schema.org structured data - Location set to GB generic
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'NightClub',
@@ -65,7 +65,6 @@ export default function RootLayout({
     description: 'Underground Jungle and Bass Culture Sanctuary.',
     address: {
       '@type': 'PostalAddress',
-      addressLocality: 'London',
       addressCountry: 'GB',
     },
   };
@@ -80,24 +79,20 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} antialiased overflow-x-hidden text-white selection:bg-natitude-pink selection:text-black`}>
         
-        {/* The Noise Overlay - Texture Layer */}
+        {/* Grain Overlay */}
         <div 
           className="fixed inset-0 pointer-events-none z-[9999] opacity-[0.04] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] brightness-100 contrast-150" 
           aria-hidden="true"
         />
         
-        {/* Background Ambient Depth */}
+        {/* Ambient Background */}
         <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_50%,#0a0a0a_0%,#000000_100%)] -z-10" />
 
-        {/* Global Navigation */}
         <Navbar />
 
-        {/* Main Viewport */}
         <main className="relative z-10 min-h-screen">
           {children}
         </main>
-
-        {/* Sentry or Analytics can be initialized here */}
       </body>
     </html>
   );

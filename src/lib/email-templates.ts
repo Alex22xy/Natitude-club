@@ -17,7 +17,7 @@ export const ritualConfirmationTemplate = (name: string, eventName: string) => {
       
       <p style="font-size: 10px; color: #444444; text-transform: uppercase; letter-spacing: 5px; margin-top: 50px;">Lost in the smoke, found in the bass.</p>
       <div style="margin-top: 20px; border-top: 1px solid #111; padding-top: 20px;">
-        <p style="font-size: 9px; color: #333; text-transform: uppercase;">Natitude Sanctuary | London</p>
+        <p style="font-size: 9px; color: #333; text-transform: uppercase;">Natitude Sanctuary</p>
       </div>
     </div>
   `;
@@ -44,17 +44,19 @@ export const hireReceivedTemplate = (name: string) => {
 
 /**
  * INTERNAL ADMIN NOTIFICATION (Sent to YOU)
+ * Dark mode styling for your personal inbox summary
  */
 export const adminNotificationTemplate = (type: 'RITUAL' | 'HIRE', details: any) => `
-  <div style="background-color: #f4f4f4; color: #333; padding: 20px; font-family: sans-serif;">
-    <h2 style="color: #000;">New ${type} Notification</h2>
-    <table style="width: 100%; border-collapse: collapse;">
+  <div style="background-color: #0a0a0a; color: #ffffff; padding: 30px; font-family: 'Helvetica', Arial, sans-serif; border: 1px solid #ff00ff;">
+    <h2 style="color: #ff00ff; text-transform: uppercase; letter-spacing: 3px; font-size: 18px; border-bottom: 1px solid #222; padding-bottom: 15px;">New ${type} Lead</h2>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
       ${Object.entries(details).map(([key, value]) => `
         <tr>
-          <td style="padding: 10px; border-bottom: 1px solid #ddd; font-weight: bold; text-transform: capitalize;">${key.replace('_', ' ')}</td>
-          <td style="padding: 10px; border-bottom: 1px solid #ddd;">${value}</td>
+          <td style="padding: 12px 0; border-bottom: 1px solid #1a1a1a; font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px; width: 120px;">${key.replace('_', ' ')}</td>
+          <td style="padding: 12px 0; border-bottom: 1px solid #1a1a1a; font-size: 13px; color: #eee;">${value}</td>
         </tr>
       `).join('')}
     </table>
+    <p style="font-size: 9px; color: #333; margin-top: 20px; text-transform: uppercase;">Sent via NATITUDE System</p>
   </div>
 `;
