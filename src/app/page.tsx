@@ -14,7 +14,20 @@ export default function WildPage() {
 
   return (
     <main className="locked-screen h-[100dvh] w-full bg-black relative flex items-center justify-center overflow-hidden">
-      {/* BACKGROUND VIDEO (Keep your existing video code here) */}
+      {/* BACKGROUND VIDEO */}
+      <div className="absolute inset-0 w-full h-full z-0">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover pointer-events-none"
+          style={{ filter: 'brightness(0.4) contrast(1.2)' }} // Slightly darker to let logo shine
+        >
+          <source src="/jungle.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-black/30" /> {/* Extra dim layer */}
+      </div>
       
       <div className="relative z-20 w-full max-w-[90vw] md:max-w-[650px] px-6 flex flex-col items-center">
         {!isJoining ? (
