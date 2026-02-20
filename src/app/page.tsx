@@ -38,7 +38,6 @@ export default function WildPage() {
         </p>
       </div>
 
-      
       <div className="relative z-20 w-full max-w-[90vw] md:max-w-[650px] px-6 flex flex-col items-center">
         {!isJoining ? (
           /* STATE 1: THE HERO LOGO */
@@ -77,6 +76,18 @@ export default function WildPage() {
             </div>
           </form>
         )}
+          <div className="relative z-20 w-full max-w-[90vw] md:max-w-[650px] px-6 flex flex-col items-center">
+        
+        <div className="mt-10 space-y-3 text-center">
+          <p className="text-[11px] md:text-[13px] uppercase tracking-[0.8em] text-white font-medium drop-shadow-md">
+            Bury St Edmunds
+          </p>
+          <div className="h-[1px] w-20 bg-natitude-pink mx-auto mt-4 shadow-[0_0_10px_#ff00ff]" />
+          <p className="text-[9px] uppercase tracking-[0.5em] text-zinc-300 pt-2 font-light">
+            Sonic Sanctuary
+          </p>
+        </div>
+      </div>
       </div>
     </main>
   );
