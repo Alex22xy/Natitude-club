@@ -17,7 +17,7 @@ export default function WildPage() {
           className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
           style={{ filter: 'brightness(0.6)' }}
         >
-          <source src="/hero-video.mp4" type="video/mp4" />
+          <source src="/jungle.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
 
