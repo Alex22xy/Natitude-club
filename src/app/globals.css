@@ -4,34 +4,53 @@
 :root {
   --background: #000000;
   --foreground: #ffffff;
-  --natitude-pink: #ff00ff; /* The signature neon */
+  --natitude-pink: #ff00ff; 
   --natitude-dark: #0a0a0a;
 }
 
-/* 2. Update the Theme to include your brand pink */
+/* 2. Theme Configuration */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-natitude-pink: var(--natitude-pink);
-  --font-sans: var(--font-inter); /* Matching your new layout font */
+  --font-sans: var(--font-inter);
 }
 
-/* 3. Base Styles */
-body {
+/* 3. Base Styles & Global Lock */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-inter), sans-serif;
+}
+
+/* THE "APP-LOCK" LOGIC 
+   If a page has <main className="locked-screen">, 
+   the body will disable all scrolling and "bouncing".
+*/
+body:has(main.locked-screen) {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  touch-action: none; /* Prevents pull-to-refresh and swipe-to-scroll */
+}
+
+/* Standard horizontal scroll prevention for non-locked pages */
+body {
   overflow-x: hidden;
 }
 
-/* 4. The "Underground" Aesthetic Enhancements */
+/* 4. The "Underground" Aesthetic */
 @layer base {
-  /* Cinematic Glow for your signature pink text */
   .text-natitude-pink {
     text-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
   }
 
-  /* Smooth custom scrollbar for the "Premium" feel */
+  /* Custom Scrollbar (Only shows on scrollable pages like Rituals) */
   ::-webkit-scrollbar {
     width: 4px;
   }
@@ -43,37 +62,34 @@ body {
     border-radius: 10px;
   }
 
-  /* Selection highlight (what happens when you drag mouse over text) */
   ::selection {
     background-color: var(--natitude-pink);
     color: #000;
   }
 }
 
-/* 5. Utility Animations */
+/* 5. Animations */
 @keyframes pulse-slow {
   0%, 100% { opacity: 0.3; }
   50% { opacity: 0.6; }
+}
+
+@keyframes visualizer {
+  0%, 100% { height: 10%; opacity: 0.3; }
+  50% { height: 80%; opacity: 1; }
 }
 
 .animate-pulse-slow {
   animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/* 6. Mobile Optimization */
-main {
-  -webkit-overflow-scrolling: touch;
-  min-height: 100dvh; /* Dynamic viewport height for mobile browsers */
+.animate-visualizer {
+  animation: visualizer ease-in-out infinite;
 }
 
-/*7. Visualizer*/
-@layer utilities {
-  @keyframes visualizer {
-    0%, 100% { height: 10%; opacity: 0.3; }
-    50% { height: 80%; opacity: 1; }
-  }
-
-  .animate-visualizer {
-    animation: visualizer ease-in-out infinite;
-  }
+/* 6. Mobile Layout Utility */
+main {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
 }
