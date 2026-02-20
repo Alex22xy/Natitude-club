@@ -93,24 +93,27 @@ export default function HirePage() {
 
       {/* SUCCESS OVERLAY */}
       {showSuccess && (
-        <div className="fixed inset-0 bg-black z-[200] flex flex-col items-center justify-center p-6 text-center backdrop-blur-md">
-          <div className="space-y-8 max-w-sm">
-            <div className="space-y-4">
-              <h2 className="text-natitude-pink text-2xl font-bold uppercase tracking-[0.6em] animate-pulse">Received</h2>
-              <p className="text-[9px] text-zinc-400 uppercase tracking-[0.3em] leading-relaxed">
-                Our curators have received your transmission. <br /> We will respond shortly.
-              </p>
-            </div>
-            
-            <button 
-              onClick={() => router.push('/')} 
-              className="px-12 py-4 border border-white/10 text-[9px] uppercase tracking-[0.4em] hover:bg-white hover:text-black transition-all duration-500"
-            >
-              Return to Sanctuary
-            </button>
-          </div>
-        </div>
-      )}
+  <div className="fixed inset-0 bg-black z-[200] flex flex-col items-center justify-center p-6 text-center backdrop-blur-md">
+    <div className="space-y-8 max-w-sm">
+      <div className="space-y-4">
+        <h2 className="text-natitude-pink text-2xl font-bold uppercase tracking-[0.6em] animate-pulse">Received</h2>
+        <p className="text-[9px] text-zinc-400 uppercase tracking-[0.3em] leading-relaxed">
+          Our curators have received your transmission. <br /> We will respond shortly.
+        </p>
+      </div>
+      
+      <button 
+        onClick={() => {
+          // This forces a hard refresh to the home page, clearing all form data
+          window.location.href = '/';
+        }} 
+        className="px-12 py-4 border border-white/10 text-[9px] uppercase tracking-[0.4em] hover:bg-white hover:text-black transition-all duration-500"
+      >
+        Return to Sanctuary
+      </button>
+    </div>
+  </div>
+)}
     </main>
   );
 }
