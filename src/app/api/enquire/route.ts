@@ -1,9 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
+import { hireReceivedTemplate } from '@/lib/email-templates';
 
-// Keep Supabase outside as it handles empty strings more gracefully 
-// or use the ! non-null assertion
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -11,34 +10,34 @@ const supabase = createClient(
 
 export async function POST(req: Request) {
   try {
-    // 1. Initialize Resend ONLY when the request happens
-    const apiKey = process.env.RESEND_API_KEY;
-    if (!apiKey) {
-      console.error("Missing RESEND_API_KEY");
-      return NextResponse.json({ error: "Email configuration missing" }, { status: 500 });
-    }
-    const resend = new Resend(apiKey);
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    const { name, email, type, date, message } = await req.json();
 
-    const body = await req.json();
-    const { name, email, type, date, message } = body;
-
-    // 2. Save to Supabase
+    // 1. Save to Supabase
     const { error: dbError } = await supabase.from('enquiries').insert([
       { name, email, event_type: type, event_date: date, message }
     ]);
     if (dbError) throw dbError;
 
-    // 3. Send Alert Email
+    // 2. Send to YOUR email (Sandbox Restriction)
+    // Note: We use onboarding@resend.dev and send it to YOU
+    // even if the 'email' variable is the user's email.
     await resend.emails.send({
-      from: 'Natitude System <system@yourdomain.com>', // Ensure this domain is verified in Resend
-      to: 'your-email@example.com', // Your personal email
-      subject: `New Hire Enquiry: ${type}`,
-      text: `Name: ${name}\nEmail: ${email}\nDate: ${date}\nMessage: ${message}`,
+      from: 'NATITUDE <onboarding@resend.dev>',
+      to: 'alex.john.norton9@gmail.com', 
+      subject: `HIRE REQUEST: ${name}`,
+      html: `
+        <p><strong>User Email:</strong> ${email}</p>
+        <hr />
+        ${hireReceivedTemplate(name)}
+        <p><strong>Details:</strong> ${type} on ${date}</p>
+        <p><strong>Message:</strong> ${message}</p>
+      `,
     });
 
     return NextResponse.json({ success: true });
   } catch (err: any) {
-    console.error("Enquiry Error:", err.message);
+    console.error("Resend Error:", err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
